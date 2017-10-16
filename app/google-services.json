@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "42070710224",
+    "firebase_url": "https://tagfirebasetest.firebaseio.com",
+    "project_id": "tagfirebasetest",
+    "storage_bucket": "tagfirebasetest.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:42070710224:android:d55296e85bb38e7e",
+        "android_client_info": {
+          "package_name": "com.caudelldevelopment.test.tagfirebasetest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "42070710224-duabvnnrvkti63e01n02g3gq1vtg0aqf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOsWpaqVT4Z85LZMQJZ1pFXO9_1vIPxEw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
