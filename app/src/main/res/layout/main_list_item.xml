@@ -4,5 +4,11 @@
     android:orientation="vertical">
 
     <!-- Display the item description. Maybe display the tags? -->
+    
+    <TextView
+              android:id="@+id/item_desc_tv"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:padding="5dp" />
 
 </LinearLayout>
