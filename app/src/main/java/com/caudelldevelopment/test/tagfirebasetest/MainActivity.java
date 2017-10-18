@@ -46,6 +46,9 @@ public class MainActivity extends AppCompatActivity
     private ChipsInput mTagInput;
     private List<TagChip> tags;
     private List<String> tagIds;
+    
+    private RecyclerView mRecyclerView;
+    private ItemAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +75,9 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        
+        mRecyclerView = (RecyclerView) findViewById(R.id.main_item_list);
+        
 
         // Tags
 
@@ -278,10 +284,11 @@ public class MainActivity extends AppCompatActivity
 
     protected class ItemsHolder extends RecyclerView.ViewHolder {
 
+        public TextView desc;
 
-
-        public ItemsHolder(View itemView) {
+        public ItemsHolder(TextView itemView) {
             super(itemView);
+            desc = itemView;
         }
     }
 
@@ -299,12 +306,15 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public ItemsHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return null;
+            
+            TextView tv = (TextView) LayoutInflater.from(this).inflate(R.layout.main_list_item, parent, false);
+        
+            return new ItemsHolder(tv);
         }
 
         @Override
         public void onBindViewHolder(ItemsHolder holder, int position) {
-
+                holder.desc.setText(items.get(i));
         }
 
         @Override
