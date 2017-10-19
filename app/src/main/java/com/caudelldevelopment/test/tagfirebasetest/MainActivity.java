@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.caudelldevelopment.test.tags.UI.TagChip;
 import com.crashlytics.android.Crashlytics;
@@ -48,7 +51,7 @@ public class MainActivity extends AppCompatActivity
     private List<String> tagIds;
     
     private RecyclerView mRecyclerView;
-    private ItemAdapter mAdapter;
+    private ItemsAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +79,10 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         
-        mRecyclerView = (RecyclerView) findViewById(R.id.main_item_list);
-        
+        mRecyclerView = findViewById(R.id.main_item_list);
+        mAdapter = new ItemsAdapter();
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setAdapter(mAdapter);
 
         // Tags
 
@@ -254,20 +259,23 @@ public class MainActivity extends AppCompatActivity
         String rootKey = dataSnapshot.getKey();
         Log.v(LOG_TAG, "onDataChange - rootKey: " + rootKey);
 
-        Iterable<DataSnapshot> children = dataSnapshot.getChildren();
 
+        Iterable<DataSnapshot> children = dataSnapshot.getChildren();
         int i = 0;
 
         for (DataSnapshot child : children) {
             Log.v(LOG_TAG, rootKey + " db child: " + child.getKey() + ", " + child.toString());
 
             switch (rootKey) {
-                case "Tag":
+                case "tag":
                     break;
-                case "Items":
+                case "items":
 
                     BaseItem item = child.getValue(BaseItem.class);
                     // Add to list
+
+                    mAdapter.items.add(item);
+                    mAdapter.notifyDataSetChanged();
 
                     break;
                 default:
@@ -294,27 +302,27 @@ public class MainActivity extends AppCompatActivity
 
     protected class ItemsAdapter extends RecyclerView.Adapter<ItemsHolder> {
 
-        List<String> items;
+        List<Taggable> items;
 
         public ItemsAdapter() {
             items = new LinkedList<>();
         }
 
-        public ItemsAdapter(List<String> data) {
+        public ItemsAdapter(List<Taggable> data) {
             items = data;
         }
 
         @Override
         public ItemsHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             
-            TextView tv = (TextView) LayoutInflater.from(this).inflate(R.layout.main_list_item, parent, false);
+            TextView tv = (TextView) LayoutInflater.from(getApplicationContext()).inflate(R.layout.main_list_item, parent, false);
         
             return new ItemsHolder(tv);
         }
 
         @Override
         public void onBindViewHolder(ItemsHolder holder, int position) {
-                holder.desc.setText(items.get(i));
+                holder.desc.setText(items.get(position).getDesc());
         }
 
         @Override
