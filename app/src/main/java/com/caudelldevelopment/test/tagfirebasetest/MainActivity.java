@@ -132,41 +132,7 @@ public class MainActivity extends AppCompatActivity
 
 
 
-        root.child("tags").addListenerForSingleValueEvent(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Log.v(LOG_TAG,
-                                "ValueEventListener - onDataChange: " +
-                                dataSnapshot.getKey() + ", " +
-                                dataSnapshot.toString());
-
-                        Iterable<DataSnapshot> children = dataSnapshot.getChildren();
-
-                        List<Tag> tags = new LinkedList<>();
-
-                        int i = 0;
-                        for (DataSnapshot child : children) {
-                            Log.v(LOG_TAG, "Child " + i + ": " + child.getKey() + ", " + child.toString());
-                            Log.v(LOG_TAG, "Child.class: " + child.getClass().getName() + ", " + child.getClass().toString());
-                            Log.v(LOG_TAG, "TagChip.class: " + TagChip.class.getName() + ", " + TagChip.class.toString());
-
-//                            TagChip temp = child.getValue(TagChip.class);
-                            Object key = child.getValue();
-
-                            Log.v(LOG_TAG, "ValueEvent, onDataChange - child value: " + key);
-
-                            i++;
-                        }
-
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.w(LOG_TAG + " : ValueEvent", "onCancelled: " + databaseError.getMessage());
-                    }
-        });
+        root.child("tags").addListenerForSingleValueEvent(this);
 
         final List<Taggable> itemsList = new LinkedList<>();
         root.child("items").addListenerForSingleValueEvent(this);
@@ -268,20 +234,42 @@ public class MainActivity extends AppCompatActivity
 
             switch (rootKey) {
                 case "tag":
+
+                    Log.v(LOG_TAG, "Child " + i + ": " + child.getKey() + ", " + child.toString());
+                    Log.v(LOG_TAG, "Child.class: " + child.getClass().getName() + ", " + child.getClass().toString());
+                    Log.v(LOG_TAG, "TagChip.class: " + TagChip.class.getName() + ", " + TagChip.class.toString());
+
+//                            TagChip temp = child.getValue(TagChip.class);
+                    Object key = child.getValue();
+
+                    Log.v(LOG_TAG, "ValueEvent, onDataChange - child value: " + key);
+
+                    i++;
+
                     break;
                 case "items":
 
-                    BaseItem item = child.getValue(BaseItem.class);
-                    // Add to list
-
-                    mAdapter.items.add(item);
-                    mAdapter.notifyDataSetChanged();
+//                    BaseItem item = child.getValue(BaseItem.class);
+//                    // Add to list
+//
+//
+//
+//                    mAdapter.items.add(item);
+//                    mAdapter.notifyDataSetChanged();
 
                     break;
                 default:
                     Log.w(LOG_TAG, "onDataChange - root key not recognized: " + rootKey);
             }
         }
+
+        List<Taggable> temp = new LinkedList<>();
+        temp.add(new BaseItem("One"));
+        temp.add(new BaseItem("Two"));
+        temp.add(new BaseItem("Three"));
+
+        mAdapter.items.addAll(temp);
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -322,7 +310,10 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public void onBindViewHolder(ItemsHolder holder, int position) {
-                holder.desc.setText(items.get(position).getDesc());
+            String descText = items.get(position).getDesc();
+            Log.v(LOG_TAG, "ItemsAdapter - onBindViewHolder desc: " + descText);
+
+            holder.desc.setText(descText);
         }
 
         @Override

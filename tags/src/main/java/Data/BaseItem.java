@@ -23,6 +23,11 @@ public class BaseItem implements Taggable {
         tags = new LinkedList<>();
     }
 
+    public BaseItem(String desc) {
+        tags = new LinkedList<>();
+        this.desc = desc;
+    }
+
     @Override
     public void setDesc(String desc) {
         this.desc = desc;

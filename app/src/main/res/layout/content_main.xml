@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.caudelldevelopment.test.tagfirebasetest.MainActivity"
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="81dp"
-    tools:showIn="@layout/app_bar_main">
+    tools:showIn="@layout/app_bar_main"
 
-    <com.pchmn.materialchips.ChipsInput
+    android:background="#0000FF">
+
+    <com.pchmn.materialchips.ChipsInput android:visibility="gone"
         android:id="@+id/tag_input"
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -34,14 +37,14 @@
         app:layout_constraintTop_toTopOf="parent"
         app:maxRows="3" />
 
-    <android.support.v7.widget.RecyclerView
+    <android.support.v7.widget.RecyclerView android:background="#FF0000"
         android:id="@+id/main_item_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginBottom="326dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent" />
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
