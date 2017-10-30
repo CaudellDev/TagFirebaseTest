@@ -154,7 +154,13 @@ public class MainActivity extends AppCompatActivity
 //                Log.w(LOG_TAG, "Failed to read value.", error.toException());
 //            }
 //        });
+        List<Taggable> temp = new LinkedList<>();
+        temp.add(new BaseItem("One"));
+        temp.add(new BaseItem("Two"));
+        temp.add(new BaseItem("Three"));
 
+        mAdapter.items.addAll(temp);
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -233,7 +239,7 @@ public class MainActivity extends AppCompatActivity
             Log.v(LOG_TAG, rootKey + " db child: " + child.getKey() + ", " + child.toString());
 
             switch (rootKey) {
-                case "tag":
+                case "tags":
 
                     Log.v(LOG_TAG, "Child " + i + ": " + child.getKey() + ", " + child.toString());
                     Log.v(LOG_TAG, "Child.class: " + child.getClass().getName() + ", " + child.getClass().toString());
@@ -262,14 +268,6 @@ public class MainActivity extends AppCompatActivity
                     Log.w(LOG_TAG, "onDataChange - root key not recognized: " + rootKey);
             }
         }
-
-        List<Taggable> temp = new LinkedList<>();
-        temp.add(new BaseItem("One"));
-        temp.add(new BaseItem("Two"));
-        temp.add(new BaseItem("Three"));
-
-        mAdapter.items.addAll(temp);
-        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -282,9 +280,10 @@ public class MainActivity extends AppCompatActivity
 
         public TextView desc;
 
-        public ItemsHolder(TextView itemView) {
-            super(itemView);
-            desc = itemView;
+        public ItemsHolder(View view) {
+            super(view);
+//            desc = itemView;
+            desc = view.findViewById(R.id.item_desc_tv);
         }
     }
 
@@ -302,9 +301,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public ItemsHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            
-            TextView tv = (TextView) LayoutInflater.from(getApplicationContext()).inflate(R.layout.main_list_item, parent, false);
-        
+            View tv = LayoutInflater.from(getApplicationContext()).inflate(R.layout.main_list_item, parent, false);
             return new ItemsHolder(tv);
         }
 
@@ -318,7 +315,8 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public int getItemCount() {
-            return 0;
+//            return 0;
+            return items.size();
         }
     }
 }
