@@ -2,8 +2,6 @@ package com.caudelldevelopment.test.tagfirebasetest;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,18 +24,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.pchmn.materialchips.ChipsInput;
 import com.pchmn.materialchips.model.ChipInterface;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import Data.BaseItem;
-import Data.Tag;
 import Data.Taggable;
 import io.fabric.sdk.android.Fabric;
 
@@ -52,6 +46,7 @@ public class MainActivity extends AppCompatActivity
     
     private RecyclerView mRecyclerView;
     private ItemsAdapter mAdapter;
+    private List<Taggable> listItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,8 +79,9 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
 
-        // Tags
+        // Tags and Items
 
+        listItems = new LinkedList<>();
         tags = new LinkedList<>();
         mTagInput = findViewById(R.id.tag_input);
         mTagInput.addChipsListener(new ChipsInput.ChipsListener() {
@@ -127,14 +123,9 @@ public class MainActivity extends AppCompatActivity
         // ------ Firebase -------
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-
         DatabaseReference root = database.getReference();
 
-
-
-        root.child("tags").addListenerForSingleValueEvent(this);
-
-        final List<Taggable> itemsList = new LinkedList<>();
+//        root.child("tags").addListenerForSingleValueEvent(this);
         root.child("items").addListenerForSingleValueEvent(this);
 
 
@@ -154,13 +145,16 @@ public class MainActivity extends AppCompatActivity
 //                Log.w(LOG_TAG, "Failed to read value.", error.toException());
 //            }
 //        });
+
+
+
         List<Taggable> temp = new LinkedList<>();
         temp.add(new BaseItem("One"));
         temp.add(new BaseItem("Two"));
         temp.add(new BaseItem("Three"));
 
-        mAdapter.items.addAll(temp);
-        mAdapter.notifyDataSetChanged();
+        listItems = temp;
+        mAdapter.update();
     }
 
     @Override
@@ -175,7 +169,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // Inflate the menu; this adds data to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
@@ -231,18 +225,18 @@ public class MainActivity extends AppCompatActivity
         String rootKey = dataSnapshot.getKey();
         Log.v(LOG_TAG, "onDataChange - rootKey: " + rootKey);
 
+        // Empty it for now. Add only new ones later.
+        if (listItems != null) listItems.clear();
 
-        Iterable<DataSnapshot> children = dataSnapshot.getChildren();
         int i = 0;
-
+        Iterable<DataSnapshot> children = dataSnapshot.getChildren();
         for (DataSnapshot child : children) {
             Log.v(LOG_TAG, rootKey + " db child: " + child.getKey() + ", " + child.toString());
+            Log.v(LOG_TAG, "Child " + i + ": " + child.getKey() + ", " + child.toString());
+            Log.v(LOG_TAG, "Child.class: " + child.getClass().getName() + ", " + child.getClass().toString());
 
             switch (rootKey) {
                 case "tags":
-
-                    Log.v(LOG_TAG, "Child " + i + ": " + child.getKey() + ", " + child.toString());
-                    Log.v(LOG_TAG, "Child.class: " + child.getClass().getName() + ", " + child.getClass().toString());
                     Log.v(LOG_TAG, "TagChip.class: " + TagChip.class.getName() + ", " + TagChip.class.toString());
 
 //                            TagChip temp = child.getValue(TagChip.class);
@@ -254,19 +248,21 @@ public class MainActivity extends AppCompatActivity
 
                     break;
                 case "items":
+                    Log.v(LOG_TAG, "BaseItem.class: " + BaseItem.class.getName() + ", " + BaseItem.class.toString());
 
-//                    BaseItem item = child.getValue(BaseItem.class);
-//                    // Add to list
-//
-//
-//
-//                    mAdapter.items.add(item);
-//                    mAdapter.notifyDataSetChanged();
+                    BaseItem item = child.getValue(BaseItem.class);
+                    // Add to list
+
+                    listItems.add(item);
 
                     break;
                 default:
                     Log.w(LOG_TAG, "onDataChange - root key not recognized: " + rootKey);
             }
+        }
+
+        if (rootKey.equals("items")) {
+            mAdapter.update();
         }
     }
 
@@ -289,14 +285,14 @@ public class MainActivity extends AppCompatActivity
 
     protected class ItemsAdapter extends RecyclerView.Adapter<ItemsHolder> {
 
-        List<Taggable> items;
+        List<String> data;
 
         public ItemsAdapter() {
-            items = new LinkedList<>();
+            data = new LinkedList<>();
         }
 
-        public ItemsAdapter(List<Taggable> data) {
-            items = data;
+        public ItemsAdapter(List<String> data) {
+            this.data = data;
         }
 
         @Override
@@ -307,7 +303,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public void onBindViewHolder(ItemsHolder holder, int position) {
-            String descText = items.get(position).getDesc();
+            String descText = data.get(position);
             Log.v(LOG_TAG, "ItemsAdapter - onBindViewHolder desc: " + descText);
 
             holder.desc.setText(descText);
@@ -315,8 +311,22 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public int getItemCount() {
-//            return 0;
-            return items.size();
+            return data.size();
+        }
+
+        public void update() {
+            Log.v(LOG_TAG, "ItemsAdapter - update called.");
+
+            // Get the Taggable list descriptions to their own list.
+            data = new LinkedList<>();
+            for (int i = 0; i < listItems.size(); i++) {
+                String tempDesc = listItems.get(i).getDesc();
+                Log.v(LOG_TAG, "ItemsAdapter.update - item(" + i + "): " + tempDesc);
+
+                data.add(tempDesc);
+            }
+
+            notifyDataSetChanged();
         }
     }
 }

@@ -9,11 +9,9 @@
     tools:context="com.caudelldevelopment.test.tagfirebasetest.MainActivity"
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="81dp"
-    tools:showIn="@layout/app_bar_main"
+    tools:showIn="@layout/app_bar_main" >
 
-    android:background="#0000FF">
-
-    <com.pchmn.materialchips.ChipsInput android:visibility="gone"
+    <com.pchmn.materialchips.ChipsInput
         android:id="@+id/tag_input"
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -37,11 +35,10 @@
         app:layout_constraintTop_toTopOf="parent"
         app:maxRows="3" />
 
-    <android.support.v7.widget.RecyclerView android:background="#FF0000"
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/main_item_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="326dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="1"

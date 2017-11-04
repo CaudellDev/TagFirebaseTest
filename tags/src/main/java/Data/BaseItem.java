@@ -21,6 +21,7 @@ public class BaseItem implements Taggable {
 
     public BaseItem() {
         tags = new LinkedList<>();
+        desc = "";
     }
 
     public BaseItem(String desc) {
