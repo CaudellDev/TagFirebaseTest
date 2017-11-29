@@ -21,7 +21,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 public class AddTagActivity extends AppCompatActivity implements ValueEventListener {
 
@@ -88,7 +87,7 @@ public class AddTagActivity extends AppCompatActivity implements ValueEventListe
         TagChip newTag = dataSnapshot.getValue(TagChip.class);
 
         if (newTag != null) {
-            Log.v(LOG_TAG, "Tag label: " + newTag.getLabel());
+            Log.v(LOG_TAG, "Tag label: " + newTag.getName());
         }
     }
 
@@ -120,7 +119,7 @@ public class AddTagActivity extends AppCompatActivity implements ValueEventListe
         @Override
         public void onBindViewHolder(TagViewHolder holder, int position) {
             TagChip currTag = tags.get(position);
-            holder.tagLabel.setText(currTag.getLabel());
+            holder.tagLabel.setText(currTag.getName());
         }
 
         @Override

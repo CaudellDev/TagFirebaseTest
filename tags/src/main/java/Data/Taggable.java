@@ -21,15 +21,7 @@ public interface Taggable {
     void removeTagLabel(String tag);
     String getTagLabel(int pos);
     List<String> getTagLabels();
+//    void setTagLabels(List<String> tagLabels);
 
-    void addTagId(Object id);
-    void removeTagId(Object id);
-    Object getTagId(int pos);
-    List<Object> getTagIds();
-
-    // May not need these?
-    void addTag(Tag tag);
-    void removeTag(Tag tag);
-    Tag getTag(int pos);
-    List<Tag> getTags();
+    void setTagLabels(List<String> tags);
 }

@@ -51,8 +51,8 @@ public class BaseItem implements Taggable {
 
     @Override
     public boolean isTagged(Tag tag) {
-        Log.v(LOG_TAG, "isTagged: " + tag.getLabel());
-        return tags.contains(tag.getLabel());
+        Log.v(LOG_TAG, "isTagged: " + tag.getName());
+        return tags.contains(tag.getName());
     }
 
     @Override
@@ -82,42 +82,23 @@ public class BaseItem implements Taggable {
     }
 
     @Override
-    public void addTagId(Object id) {
-        tags.add(id.toString());
+    public void setTagLabels(List<String> tagLabels) {
+        this.tags = tagLabels;
     }
 
     @Override
-    public void removeTagId(Object id) {
-        tags.remove(id.toString());
-    }
+    public String toString() {
+        StringBuilder builder = new StringBuilder(getDesc());
 
-    @Override
-    public Object getTagId(int pos) {
-        return tags.get(pos);
-    }
+        builder.append(" (");
+        for (int i = 0; i < tags.size(); i++) {
+            if (tags.get(i) != null) {
+                builder.append(tags.get(i));
+                if (i != tags.size() - 1) builder.append(", ");
+            }
+        }
+        builder.append(")");
 
-    @Override
-    public List<Object> getTagIds() {
-        return null;
-    }
-
-    @Override
-    public void addTag(Tag tag) {
-
-    }
-
-    @Override
-    public void removeTag(Tag tag) {
-
-    }
-
-    @Override
-    public Tag getTag(int pos) {
-        return null;
-    }
-
-    @Override
-    public List<Tag> getTags() {
-        return null;
+        return builder.toString();
     }
 }
